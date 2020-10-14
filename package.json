@@ -1,6 +1,6 @@
 {
   "name": "@genx/test",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Gen-X test framework",
   "main": "lib/index.js",
   "dependencies": {
