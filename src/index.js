@@ -1,3 +1,7 @@
+if (process.env.ASYNC_DUMP) {
+    require('./asyncDump');
+}
+
 const path = require('path');
 const { _, fs } = require('rk-utils');
 const { Starters: { startWorker } } = require('@genx/app');
@@ -27,7 +31,7 @@ async function startWebServer(serverEntry) {
  * @param {*} testToRun 
  * @returns {Promise.<*>}
  */
-exports.startRestClient = async (name, userTag, testToRun) => {
+exports.startRestClient = async (name, userTag, testToRun, options) => {
     let err;
 
     await startWorker(async (app) => {
@@ -42,7 +46,9 @@ exports.startRestClient = async (name, userTag, testToRun) => {
         workerName: "tester",        
         configName: "test",
         configPath: "./test/conf",
-        ignoreUncaught: true
+        appModulesPath: "app_modules",
+        ignoreUncaught: true,
+        ...options
     });
 
     if (err) {
@@ -146,6 +152,10 @@ exports.testSuite = (file, body, { before: onBefore, after: onAfter, serverEntry
    
                 if (onAfter) {
                     await onAfter();                    
+                }
+
+                if (process.env.ASYNC_DUMP) {
+                    asyncDump(process.env.ASYNC_DUMP.length > 1 ? process.env.ASYNC_DUMP : null);
                 }
             });   
         }

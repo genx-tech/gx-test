@@ -4,15 +4,7 @@ module.exports = function (api) {
   let isProduction = api.env(["production"]); 
 
   return {
-    "env": {
-      "development": {
-        "sourceMaps": "both",
-        "plugins": ["source-map-support"]
-      },
-      "production": {
-        "minified": true        
-      }
-    },
+    "sourceMaps": "both",
     "presets": [
       [
         "@babel/env",
@@ -44,7 +36,8 @@ module.exports = function (api) {
       "@babel/plugin-proposal-nullish-coalescing-operator",
       "@babel/plugin-proposal-optional-chaining",
       "@babel/plugin-proposal-logical-assignment-operators",
-      ["@babel/plugin-proposal-pipeline-operator", { "proposal": "minimal" }]
+      ["@babel/plugin-proposal-pipeline-operator", { "proposal": "minimal" }],
+      "source-map-support"
     ]
   };
 }
