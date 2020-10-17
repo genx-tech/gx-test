@@ -141,7 +141,7 @@ exports.testSuite = (file, body, { before: onBefore, after: onAfter, serverEntry
             });   
         }
 
-        if (process.env.COVER_MODE || onAfter) {
+        if (process.env.COVER_MODE || onAfter || process.env.ASYNC_DUMP) {
             after(async () => {
                 console.log();
 
