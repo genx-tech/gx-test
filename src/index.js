@@ -100,10 +100,11 @@ async function getRestClient(app, name, userTag) {
     return client;
 };
 
-let suiteName;
+let suiteName, verboseEnabled;
 
-exports.testSuite = (file, body, { before: onBefore, after: onAfter, serverEntry } = {}) => {
+exports.testSuite = (file, body, { before: onBefore, after: onAfter, serverEntry, verbose } = {}) => {
     suiteName = path.basename(file, '.spec.js');
+    verboseEnabled = verbose;
 
     const testOptsFile = path.resolve('test/test.local.js');
 
@@ -251,6 +252,10 @@ exports.testStep = async (step, body) => {
     const { allure } = require('allure-mocha/runtime');
     if (allure) {
         allure.createStep(step, () => {})();
+    }
+
+    if (verboseEnabled) {
+        console.log('Step: ', step);
     }
 
     await body();
