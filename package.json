@@ -10,7 +10,7 @@
     "@genx/app": "*",
     "rk-utils": "*"
   },
-  "dependencies": {    
+  "dependencies": {
     "allure-commandline": "^2.13.0",
     "allure-mocha": "^2.0.0-beta.8",
     "cross-env": "^7.0.2",
@@ -33,9 +33,6 @@
     "@babel/preset-env": "^7.8.4",
     "babel-plugin-contract": "^1.3.3",
     "babel-plugin-source-map-support": "^2.1.1"
-  },
-  "publishConfig": {
-    "access": "public"
   },
   "scripts": {
     "bulid:clean": "rm -rf lib",
