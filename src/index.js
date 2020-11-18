@@ -133,7 +133,6 @@ exports.testSuite = (file, body, { before: onBefore, after: onAfter, serverEntry
         before(async () => {
             const allureMocha = require('allure-mocha/runtime');            
             allure = allureMocha.allure;
-            console.log('allure', allure);        
 
             if (process.env.COVER_MODE) {
                webServer = await startWebServer(serverEntry);
@@ -172,8 +171,6 @@ function testCase(story, body, data) {
         if (allure) {
             if (data) {
                 const { description, epic, feature, owner, tag, issues, severity } = data.allure;
-
-                console.log(data.allure);
 
                 description && allure.description(description);
                 epic && allure.epic(epic);
@@ -233,7 +230,6 @@ exports.testCaseFromFixtures = (story, body) => {
 }
 
 function attachObject(name, obj) {
-    //const { allure } = require('allure-mocha/runtime');
     if (!allure) return;
 
     let type = 'plain/text', content = obj;
@@ -248,10 +244,8 @@ function attachObject(name, obj) {
 
 exports.attachObject = attachObject;
 
-exports.testStep = async (step, body) => {
-    //const { allure } = require('allure-mocha/runtime');
-    if (allure) {
-        console.log('allure.createStep');
+exports.testStep = async (step, body) => {    
+    if (allure) {        
         allure.createStep(step, () => {})();
     }
 
