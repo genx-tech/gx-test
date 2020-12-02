@@ -81,7 +81,7 @@ class Suite {
         }
     }
 
-    testCase(story, body, data) {
+    testCase(story, body, { data, cleanUp }) {
         it(story, async function () {
             if (this.verbose) {
                 console.log('Starting story:', story);
@@ -117,12 +117,20 @@ class Suite {
                     });
                 }
             }
-    
-            await body(data);
+
+            if (cleanUp) {
+                try {
+                    await body(data);
+                } finally {
+                    await cleanUp();
+                }
+            } else {
+                await body(data);
+            }            
         });
     }
     
-    testCaseFromFixtures(story, body) {
+    testCaseFromFixtures(story, body, cleanUp) {
         const p = path.resolve(`test/fixtures/${this.name}.js`);
         const suiteData = require(p);
         if (!suiteData) throw new Error(`Suite data not found. Suite: ${this.name}`);
@@ -142,7 +150,7 @@ class Suite {
                 expected: caseData.expected
             }
             
-            this.testCase(`${story}#${i+1}`, body, preparedData); 
+            this.testCase(`${story}#${i+1}`, body, { data: preparedData, cleanUp }); 
         });    
     }
 
