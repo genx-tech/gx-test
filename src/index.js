@@ -134,6 +134,10 @@ exports.testSuite = (file, body, { before: onBefore, after: onAfter, serverEntry
             const allureMocha = require('allure-mocha/runtime');            
             allure = allureMocha.allure;
 
+            if (verboseEnabled) {
+                console.log('Starting suite:', suiteName);
+            }
+
             if (process.env.COVER_MODE) {
                webServer = await startWebServer(serverEntry);
             }            
@@ -143,24 +147,25 @@ exports.testSuite = (file, body, { before: onBefore, after: onAfter, serverEntry
             }
         });   
 
-        if (process.env.COVER_MODE || onAfter || process.env.ASYNC_DUMP) {
-            after(async () => {
-                console.log();
+        after(async () => {
+            if (webServer && webServer.started) {
+                await webServer.stop_();
+                webServer = undefined;
+            }            
 
-                if (webServer && webServer.started) {
-                   await webServer.stop_();
-                   webServer = undefined;
-                }            
-   
-                if (onAfter) {
-                    await onAfter();                    
-                }
+            if (onAfter) {
+                await onAfter();                    
+            }
 
-                if (process.env.ASYNC_DUMP) {
-                    asyncDump(process.env.ASYNC_DUMP.length > 1 ? process.env.ASYNC_DUMP : null);
-                }
-            });   
-        }
+            if (verboseEnabled) {
+                console.log('Finished suite:', suiteName);
+            }
+            console.log();
+
+            if (process.env.ASYNC_DUMP) {
+                asyncDump(process.env.ASYNC_DUMP.length > 1 ? process.env.ASYNC_DUMP : null);
+            }
+        }); 
 
         body();
     });
@@ -168,6 +173,10 @@ exports.testSuite = (file, body, { before: onBefore, after: onAfter, serverEntry
 
 function testCase(story, body, data) {
     it(story, async function () {
+        if (verboseEnabled) {
+            console.log('Starting story:', story);
+        }
+
         if (allure) {
             if (data) {
                 const { description, epic, feature, owner, tag, issues, severity } = data.allure;
