@@ -3,6 +3,7 @@ const { _ } = require('rk-utils');
 const { Starters: { startWorker } } = require('@genx/app');
 
 const tokenCache = {};
+let allure;
 
 class Suite {
     constructor(name, { serverEntry, verbose }) {
@@ -71,6 +72,13 @@ class Suite {
         if (err) {
             should.not.exist(err, err.message || err);
         }    
+    }
+
+    initAllure() {
+        if (!allure) {
+            const allureMocha = require('allure-mocha/runtime');            
+            allure = allureMocha.allure;
+        }
     }
 
     testCase(story, body, data) {

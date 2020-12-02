@@ -6,8 +6,6 @@ const path = require('path');
 const { _, fs } = require('rk-utils');
 const Suite = require('./Suite');
 
-let allure;
-
 module.exports = (file, body, { before: onBefore, after: onAfter, serverEntry, verbose } = {}) => {
     const suiteName = path.basename(file, '.spec.js');
     const suite = new Suite(suiteName, { serverEntry, verbose });
@@ -37,10 +35,7 @@ module.exports = (file, body, { before: onBefore, after: onAfter, serverEntry, v
 
     (opt ? describe[opt] : describe)(suiteName, function () {
         before(async () => {
-            if (!allure) {
-                const allureMocha = require('allure-mocha/runtime');            
-                allure = allureMocha.allure;
-            }
+            suite.initAllure();
 
             if (verbose) {
                 console.log('Starting suite:', suiteName);
