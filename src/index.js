@@ -56,11 +56,11 @@ module.exports = (file, body, { before: onBefore, after: onAfter, serverEntry, v
             if (onAfter) {
                 await onAfter();                    
             }
-
+            
+            console.log();
             if (verbose) {
                 console.log('Finished suite:', suiteName);
             }
-            console.log();
 
             if (process.env.ASYNC_DUMP) {
                 asyncDump(process.env.ASYNC_DUMP.length > 1 ? process.env.ASYNC_DUMP : null);
