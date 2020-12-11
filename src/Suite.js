@@ -5,16 +5,43 @@ const { Starters: { startWorker } } = require('@genx/app');
 const tokenCache = {};
 let allure;
 
-class Suite {
-    constructor(name, { serverEntry, verbose }) {
+/**
+ * Test function with a connected rest client.
+ * @callback testWithRestClient
+ * @param {App} app - The app
+ * @param {RestClient} client - The rest client
+ */
+
+/**
+ * Test case body.
+ * @callback testCaseBody
+ * @param {*} data - Test data
+ */ 
+
+/**
+ * Test suite object.
+ * @class
+ */
+class Suite {    
+    /**
+     * [private] Suite will be created by testSuite creator.
+     * @param {string} name - Suite name
+     * @param {object} [options] - Suite options 
+     * @property {string} [options.serverEntry="../../src/index.js"] - The entry file of @genx/server instance.
+     * @property {boolean} [options.verbose=false] - Verbose mode.
+     */
+    constructor(name, options) {
         this.name = name;
+        const { serverEntry, verbose } = (options == null ? {} : options);
+
         this.serverEntry = serverEntry || '../../src/index.js';
         this.verbose = verbose;
     }
 
     /**
-     * 
-     * @param {*} serverEntry - Server entry file path (relative to test working path)
+     * Start the @genx/server instace for code coverage testing.
+     * @async
+     * @private
      */
     async startWebServer_() {
         if (this.webServer) {
@@ -34,6 +61,11 @@ class Suite {
         return this.webServer;
     };
 
+    /**
+     * Stop the server if it is started.
+     * @async
+     * @private
+     */
     async stopWebServerIfStarted_() {
         if (this.webServer) {
             if (this.webServer.started) {
@@ -45,9 +77,12 @@ class Suite {
     }
 
     /**
-     * Run a test function in a worker
-     * @param {*} testToRun 
-     * @returns {Promise.<*>}
+     * Start a rest client for 
+     * @param {string} name - The config key of target endpoint
+     * @param {string} userTag - The config key of predefined user identity, pass null for guest mode.
+     * @param {testWithRestClient} testToRun - Test function with a connected rest client.
+     * @param {*} options - Options passed the test worker, see startWorker of @genx/app.
+     * @async
      */
     async startRestClient_(name, userTag, testToRun, options) {
         let err;
@@ -74,6 +109,9 @@ class Suite {
         }    
     }
 
+    /**
+     * @private
+     */
     initAllure() {
         if (!allure) {
             const allureMocha = require('allure-mocha/runtime');            
@@ -81,7 +119,17 @@ class Suite {
         }
     }
 
-    testCase(story, body, { data, cleanUp }) {
+    /**
+     * Define a test case.
+     * @param {string} story - Test case title.
+     * @param {testCaseBody} body - Test case body to write actual test code.
+     * @param {object} [options] 
+     * @property {*} options.data - Test data
+     * @property {function} options.cleanUp - Cleanup after the case ends regardless whether it is successful or not.
+     */
+    testCase(story, body, options) {
+        const { data, cleanUp } = (options == null ? {} : options);
+
         it(story, async function () {
             if (this.verbose) {
                 console.log('Starting story:', story);
@@ -130,6 +178,12 @@ class Suite {
         });
     }
     
+    /**
+     * Test case with fixtures.
+     * @param {string} story 
+     * @param {testCaseBody} body 
+     * @param {function} [cleanUp] 
+     */
     testCaseFromFixtures(story, body, cleanUp) {
         const p = path.resolve(`test/fixtures/${this.name}.js`);
         const suiteData = require(p);
@@ -154,6 +208,11 @@ class Suite {
         });    
     }
 
+    /**
+     * Define a test step.
+     * @param {string} step 
+     * @param {function} [body] - Test step body 
+     */
     async testStep_(step, body) {    
         if (allure) {        
             allure.createStep(step, () => {})();
@@ -163,9 +222,16 @@ class Suite {
             console.log('Step: ', step);
         }
 
-        await body();
+        if (body) {
+            await body();
+        }
     }    
 
+    /**
+     * Attach an object to the test report.
+     * @param {string} name 
+     * @param {*} obj 
+     */
     attachObject(name, obj) {
         if (!allure) return;
     

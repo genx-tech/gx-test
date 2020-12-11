@@ -6,7 +6,25 @@ const path = require('path');
 const { _, fs } = require('rk-utils');
 const Suite = require('./Suite');
 
-module.exports = (file, body, { before: onBefore, after: onAfter, serverEntry, verbose } = {}) => {
+/**
+ * Test body used to define test cases.
+ * @callback testSuiteBody
+ * @param {Suite} suite - The test suite object
+ */
+
+/**
+ * Create a test suite.
+ * @param {string} file - The test spec file name, just use __filename.
+ * @param {testSuiteBody} body - To define test cased in this callback. 
+ * @param {object} [options]
+ * @property {function} options.before - Prepare work before all test cases.
+ * @property {function} options.after - Cleanup work after all test cases.
+ * @property {string} [options.serverEntry="../../src/index.js"] - The entry file of @genx/server instance.
+ * @property {boolean} options.verbose - Verbose mode.
+ */
+function testSuite (file, body, options) {
+    const { before: onBefore, after: onAfter, serverEntry, verbose } = (options == null ? {} : options);
+
     const suiteName = path.basename(file, '.spec.js');
     const suite = new Suite(suiteName, { serverEntry, verbose });
 
@@ -70,3 +88,5 @@ module.exports = (file, body, { before: onBefore, after: onAfter, serverEntry, v
         body(suite);
     });
 }
+
+module.exports = testSuite;
