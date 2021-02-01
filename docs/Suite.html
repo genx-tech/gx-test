@@ -562,7 +562,7 @@
 
     
     <div class="description">
-        <p>Start a rest client for</p>
+        <p>Start a rest client for testing</p>
     </div>
     
 
@@ -641,6 +641,163 @@
             <td class="description last"><p>The config key of predefined user identity, pass null for guest mode.</p></td>
         </tr>
 
+    
+
+        <tr>
+            
+                <td class="name"><code>testToRun</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#testWithRestClient">testWithRestClient</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Test function with a connected rest client.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Options passed the test worker, see startWorker of @genx/app.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		Suite.js
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="startWorker_"><span class="type-signature">&lt;async> </span>startWorker_(testToRun, options)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Start a worker app for testing</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
     
 
         <tr>
@@ -1254,7 +1411,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="testStep_"><span class="type-signature">&lt;async> </span>testStep_(step, body)</h4>
+    <h4 class="name" id="testStep_"><span class="type-signature">&lt;async> </span>testStep_(step [, body])</h4>
     
     
 </dt>
@@ -1285,6 +1442,8 @@
         <th>Type</th>
 
         
+        <th>Argument</th>
+        
 
         
 
@@ -1311,6 +1470,14 @@
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -1335,10 +1502,20 @@
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Test step body</p></td>
         </tr>
 
     

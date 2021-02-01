@@ -24,7 +24,28 @@ Gen-X test framework
 "report": "allure generate allure-results --clean -o allure-report && allure open allure-report"
 ```
 
-## 
+## Setup test configs
+
+* test/mocha-multi-reporters.json
+```
+{    
+    "progress": {
+        "stdout": "-",        
+        "options": {
+            "verbose": true
+        }
+    },
+    "allure-mocha": {
+        "stdout": "-",
+        "options": {
+            "resultsDir": "./allure-results"
+        }
+    }
+}
+```
+
+* test/conf/test.*.json e.g. test.default.json
+See 
 
 ## Test spec file sample
 
@@ -50,6 +71,19 @@ testSuite(__filename, function (suite) {
         });
     }, {});
 }, { verbose: true });
+```
+
+## Local config to run specific cases only or to skip specified cases
+
+```
+module.exports = {
+    only: [
+        // similar to describe.only
+    ],
+    skip: [
+        // similar to describe.skip
+    ]
+}
 ```
 
 ## License

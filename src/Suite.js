@@ -12,6 +12,12 @@ let allure;
  * @param {RestClient} client - The rest client
  */
 
+ /**
+ * Test function with a worker app.
+ * @callback testWithApp
+ * @param {App} app - The app
+ */
+
 /**
  * Test case body.
  * @callback testCaseBody
@@ -77,24 +83,20 @@ class Suite {
     }
 
     /**
-     * Start a rest client for 
-     * @param {string} name - The config key of target endpoint
-     * @param {string} userTag - The config key of predefined user identity, pass null for guest mode.
+     * Start a worker app for testing
      * @param {testWithRestClient} testToRun - Test function with a connected rest client.
      * @param {*} options - Options passed the test worker, see startWorker of @genx/app.
      * @async
      */
-    async startRestClient_(name, userTag, testToRun, options) {
+    async startWorker_(testToRun, options) {
         let err;
 
         await startWorker(async (app) => {
-            const client = await this._getRestClient_(app, name, userTag);
             try {
-                await testToRun(app, client);
+                await testToRun(app);
             } catch (e) {
                 err = e;
-            }
-            
+            }            
         }, {
             workerName: "tester",        
             configName: "test",
@@ -107,6 +109,21 @@ class Suite {
         if (err) {
             should.not.exist(err, err.message || err);
         }    
+    }
+
+    /**
+     * Start a rest client for testing
+     * @param {string} name - The config key of target endpoint
+     * @param {string} userTag - The config key of predefined user identity, pass null for guest mode.
+     * @param {testWithRestClient} testToRun - Test function with a connected rest client.
+     * @param {*} options - Options passed the test worker, see startWorker of @genx/app.
+     * @async
+     */
+    async startRestClient_(name, userTag, testToRun, options) {
+        return this.startWorker_(async (app) => {
+            const client = await this._getRestClient_(app, name, userTag);
+            return testToRun(app, client);
+        }, options);
     }
 
     /**
@@ -158,7 +175,7 @@ class Suite {
                     _.forOwn(data.params, (v, k) => {
                         if (typeof v === 'object') {
                             allure.parameter(k, '*see attachment*');    
-                            attachObject(`param[${k}]`, v);
+                            this.attachObject(`param[${k}]`, v);
                         } else {
                             allure.parameter(k, v);
                         }                    

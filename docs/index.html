@@ -95,6 +95,69 @@
     <section class="readme-section">
         <article><h1>@genx/test</h1>
 <p>Gen-X test framework</p>
+<h2>Setup test scripts</h2>
+<ul>
+<li>Add below scripts into package.json
+<ul>
+<li>Set NODE_RT=babel to enable directly testing against untranspiled ES code.</li>
+<li>Set COVER_MODE=1 to enable web server code coverage and replace superagent with supertest.</li>
+</ul>
+</li>
+</ul>
+<pre class="prettyprint source"><code>&quot;test:clean&quot;: &quot;rm -rf allure-results&quot;,
+</code></pre>
+<pre class="prettyprint source"><code>&quot;test&quot;: &quot;npm run test:clean && cross-env NODE_RT=babel mocha --reporter mocha-multi --reporter-options mocha-multi=test/mocha-multi-reporters.json test/*.spec.js&quot;,
+</code></pre>
+<pre class="prettyprint source"><code>&quot;cover&quot;: &quot;npm run test:clean && cross-env COVER_MODE=1 NODE_RT=babel nyc --reporter=html --reporter=text -- mocha --reporter progress test/*.spec.js && open ./coverage/index.html&quot;,
+</code></pre>
+<pre class="prettyprint source"><code>&quot;report&quot;: &quot;allure generate allure-results --clean -o allure-report && allure open allure-report&quot;
+</code></pre>
+<h2>Setup test configs</h2>
+<ul>
+<li>test/mocha-multi-reporters.json</li>
+</ul>
+<pre class="prettyprint source"><code>{    
+    &quot;progress&quot;: {
+        &quot;stdout&quot;: &quot;-&quot;,        
+        &quot;options&quot;: {
+            &quot;verbose&quot;: true
+        }
+    },
+    &quot;allure-mocha&quot;: {
+        &quot;stdout&quot;: &quot;-&quot;,
+        &quot;options&quot;: {
+            &quot;resultsDir&quot;: &quot;./allure-results&quot;
+        }
+    }
+}
+</code></pre>
+<ul>
+<li>test/conf/test.*.json e.g. test.default.json<br>
+See</li>
+</ul>
+<h2>Test spec file sample</h2>
+<pre class="prettyprint source"><code>const testSuite = require(&quot;@genx/test&quot;);
+const Expression = require(&quot;@genx/jes&quot;);
+
+testSuite(__filename, function (suite) {
+    suite.testCase(&quot;login and get profile&quot;, async function () {
+        await suite.startRestClient_(&quot;&lt;endpointKey>&quot;, &quot;&lt;userIdentityKey>&quot;, async (app, client) => {
+            await suite.testStep_(&quot;my-profile&quot;, async () => {
+                const myProfile = await client.get([&quot;my-profile&quot;]);
+
+                Expression.match(myProfile, {
+                    status: &quot;success&quot;,
+                    response: {
+                        id: { $exists: true },
+                        agency: { $exists: true },
+                        user: { $exists: true },
+                    },
+                })[0].should.be.ok();
+            });
+        });
+    }, {});
+}, { verbose: true });
+</code></pre>
 <h2>License</h2>
 <p>MIT</p></article>
     </section>
