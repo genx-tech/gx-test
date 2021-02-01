@@ -146,9 +146,10 @@ class Suite {
      */
     testCase(story, body, options) {
         const { data, cleanUp } = (options == null ? {} : options);
+        const self = this;
 
         it(story, async function () {
-            if (this.verbose) {
+            if (self.verbose) {
                 console.log('Starting story:', story);
             }
     
@@ -175,7 +176,7 @@ class Suite {
                     _.forOwn(data.params, (v, k) => {
                         if (typeof v === 'object') {
                             allure.parameter(k, '*see attachment*');    
-                            this.attachObject(`param[${k}]`, v);
+                            self.attachObject(`param[${k}]`, v);
                         } else {
                             allure.parameter(k, v);
                         }                    
@@ -199,9 +200,9 @@ class Suite {
      * Test case with fixtures.
      * @param {string} story 
      * @param {testCaseBody} body 
-     * @param {function} [cleanUp] 
+     * @param {Object} [options] 
      */
-    testCaseFromFixtures(story, body, cleanUp) {
+    testCaseFromFixtures(story, body, options) {
         const p = path.resolve(`test/fixtures/${this.name}.js`);
         const suiteData = require(p);
         if (!suiteData) throw new Error(`Suite data not found. Suite: ${this.name}`);
@@ -221,7 +222,7 @@ class Suite {
                 expected: caseData.expected
             }
             
-            this.testCase(`${story}#${i+1}`, body, { data: preparedData, cleanUp }); 
+            this.testCase(`${story}#${i+1}`, body, { ...options, data: preparedData }); 
         });    
     }
 
