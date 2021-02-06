@@ -245,7 +245,7 @@ class Suite {
         const Benchmark = require("benchmark");
         const suite = new Benchmark.Suite();
 
-        Object.entries(mapOfMethods).forEach(([name, f]) => {
+        _.each(mapOfMethods, (f, name) => {
             suite.add(name, function () {
                 f(payload);
             });
@@ -258,7 +258,7 @@ class Suite {
                     console.log(cycleMessage);
                     this.attachObject("cycle", cycleMessage);
                 })
-                .on("complete", function () {
+                .on("complete", () => {
                     const completeMessage = "The fastest is " + this.filter("fastest").map("name");
                     console.log(completeMessage);
                     this.attachObject("complete", completeMessage);
