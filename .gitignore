@@ -64,4 +64,3 @@ typings/
 test/temp
 .nyc_output
 coverage
-lib

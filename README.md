@@ -79,12 +79,17 @@ testSuite(__filename, function (suite) {
 module.exports = {
     only: [
         // similar to describe.only
+        // 
     ],
     skip: [
         // similar to describe.skip
     ]
 }
 ```
+
+Note: another way to do the same thing is to put skip or only in the suite options or test case options passed in through testSuite() and suite.testCase(). 
+
+"skip" and "only" option will override those specified in the config.
 
 ## License
 
