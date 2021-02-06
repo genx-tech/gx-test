@@ -1,8 +1,5 @@
 const path = require("path");
 const { _ } = require("rk-utils");
-const {
-    Starters: { startWorker },
-} = require("@genx/app");
 
 const tokenCache = {};
 let allure;
@@ -91,6 +88,10 @@ class Suite {
      * @async
      */
     async startWorker_(testToRun, options) {
+        const {
+            Starters: { startWorker },
+        } = require("@genx/app");
+        
         let err;
 
         await startWorker(
