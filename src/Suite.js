@@ -241,6 +241,11 @@ class Suite {
         });
     }
 
+    /**
+     * Run benchmark against given methods.
+     * @param {*} mapOfMethods - Map of name to function with payload
+     * @param {*} payload 
+     */
     async benchmark_(mapOfMethods, payload) {
         const Benchmark = require("benchmark");
         const suite = new Benchmark.Suite();
@@ -252,16 +257,18 @@ class Suite {
         });
 
         return new Promise((resolve, reject) => {
+            const self = this;
+
             suite
                 .on("cycle", (event) => {
                     const cycleMessage = String(event.target);
                     console.log(cycleMessage);
                     this.attachObject("cycle", cycleMessage);
                 })
-                .on("complete", () => {
+                .on("complete", function () {
                     const completeMessage = "The fastest is " + this.filter("fastest").map("name");
                     console.log(completeMessage);
-                    this.attachObject("complete", completeMessage);
+                    self.attachObject("complete", completeMessage);
                     resolve();
                 })
                 .on("error", (event) => reject(String(event.target)))

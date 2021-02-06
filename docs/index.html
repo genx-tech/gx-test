@@ -158,6 +158,19 @@ testSuite(__filename, function (suite) {
     }, {});
 }, { verbose: true });
 </code></pre>
+<h2>Local config to run specific cases only or to skip specified cases</h2>
+<pre class="prettyprint source"><code>module.exports = {
+    only: [
+        // similar to describe.only
+        // 
+    ],
+    skip: [
+        // similar to describe.skip
+    ]
+}
+</code></pre>
+<p>Note: another way to do the same thing is to put skip or only in the suite options or test case options passed in through testSuite() and suite.testCase().</p>
+<p>&quot;skip&quot; and &quot;only&quot; option will override those specified in the config.</p>
 <h2>License</h2>
 <p>MIT</p></article>
     </section>
