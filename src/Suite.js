@@ -261,7 +261,7 @@ class Suite {
                 .on("complete", function () {
                     const completeMessage = "The fastest is " + this.filter("fastest").map("name");
                     console.log(completeMessage);
-                    this.attachObject("complete", cycleMessage);
+                    this.attachObject("complete", completeMessage);
                     resolve();
                 })
                 .on("error", (event) => reject(String(event.target)))
