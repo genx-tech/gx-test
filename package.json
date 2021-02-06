@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "allure-commandline": "^2.13.0",
-    "allure-mocha": "^2.0.0-beta.8",
+    "allure-mocha": "^2.0.0-beta.9",
     "benchmark": "^2.1.4",
     "cross-env": "^7.0.2",
     "mocha": "^8.1.3",

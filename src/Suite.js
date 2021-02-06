@@ -296,7 +296,7 @@ class Suite {
     attachObject(name, obj) {
         if (!allure) return;
 
-        let type = "plain/text",
+        let type = "text/plain",
             content = obj;
 
         if (typeof obj !== "string") {
