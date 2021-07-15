@@ -26,9 +26,20 @@ function testSuite(file, body, options) {
     const { before: onBefore, after: onAfter, serverEntry, verbose, skip, only } = options == null ? {} : options;
 
     const suiteName = path.basename(file, ".spec.js");
-    const suite = new Suite(suiteName, { serverEntry, verbose });
-
     const testOptsFile = path.resolve("test/test.local.js");
+    let testOpts;
+
+    if (fs.existsSync(testOptsFile)) {
+        testOpts = require(testOptsFile);
+    }
+
+    const suiteOptions = {
+        serverEntry,
+        verbose,
+        ...(testOpts ? _.pick(testOpts, [ 'serverEntry', 'verbose' ]) : {})
+    };
+
+    const suite = new Suite(suiteName, suiteOptions);
 
     let opt;
 
@@ -36,8 +47,7 @@ function testSuite(file, body, options) {
         opt = "only";
     } else if (skip) {
         opt = "skip";
-    } else if (fs.existsSync(testOptsFile)) {
-        const testOpts = require(testOptsFile);
+    } else if (testOpts) {
         const only = new Set(testOpts.only);
 
         if (only.has(suiteName)) {
