@@ -39,7 +39,7 @@ class Suite {
         this.name = name;
         const { serverEntry, verbose } = options == null ? {} : options;
 
-        this.serverEntry = serverEntry || "../../src/index.js";
+        this.serverEntry = serverEntry || require.main.require("../../src/index.js");
         this.verbose = verbose;
     }
 
