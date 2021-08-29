@@ -1,5 +1,5 @@
 const path = require("path");
-const { _ } = require("rk-utils");
+const { _ } = require("@genx/july");
 
 const tokenCache = {};
 let allure;

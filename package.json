@@ -7,13 +7,14 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@genx/app": "*",
-    "rk-utils": "*"
+    "@genx/app": "*"
   },
   "dependencies": {
+    "@genx/july": "^0.2.10",
+    "@genx/sys": "^0.1.2",
     "allure-commandline": "2.13.8",
-    "allure-mocha": "2.0.0-beta.9",
     "allure-js-commons": "2.0.0-beta.9",
+    "allure-mocha": "2.0.0-beta.9",
     "benchmark": "2.1.4",
     "mocha": "8.3.2",
     "mocha-multi": "1.1.3",
