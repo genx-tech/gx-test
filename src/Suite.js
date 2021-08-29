@@ -315,7 +315,7 @@ class Suite {
     }
 
     async _getRestClient_(app, name, userTag) {
-        const client = app.getService(this.webServer ? `superTest.${name}` : `restClient.${name}`);
+        const client = app.getService(this.webServer ? `superTest-${name}` : `restClient-${name}`);
         if (this.webServer) {
             client.server = this.webServer.httpServer;
         }
