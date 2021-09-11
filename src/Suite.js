@@ -39,7 +39,7 @@ class Suite {
         this.name = name;
         const { serverEntry, verbose } = options == null ? {} : options;
 
-        this.serverEntry = serverEntry || require.main.require("../../src/index.js");
+        this.serverEntry = serverEntry;
         this.verbose = verbose;
     }
 
@@ -53,7 +53,7 @@ class Suite {
             throw new Error("Web server already started.");
         }
 
-        const createWebServer = require(this.serverEntry);
+        const createWebServer = this.serverEntry ? require(this.serverEntry) : require.main.require("../../src/index.js")
         this.webServer = createWebServer({
             exitOnUncaught: false,
         });
