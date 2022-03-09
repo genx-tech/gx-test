@@ -332,6 +332,7 @@ class Suite {
         }
 
         let token, userAuth;
+        const responseBodyKey = app.settings.responseBodyKey;
 
         if (_.isPlainObject(userTag)) {
             token = tokenCache[userTag.userTag];
@@ -346,7 +347,11 @@ class Suite {
                 username: userAuth.username,
                 password: userAuth.password,
             });
-            token = res.token;
+            if (responseBodyKey) {
+                token = res[responseBodyKey].token;
+            } else {
+                token = res.token;
+            }
             tokenCache[userTag] = token;
 
             app.log("info", `Logged in with [${userTag}].`);
