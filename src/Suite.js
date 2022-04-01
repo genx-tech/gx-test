@@ -332,7 +332,7 @@ class Suite {
         }
 
         let token, userAuth;
-        let responseBodyKey = app.settings.responseBodyKey;
+        let responseBodyKey = app.settings && app.settings.responseBodyKey;
 
         if (_.isPlainObject(userTag)) {
             token = tokenCache[userTag.userTag];

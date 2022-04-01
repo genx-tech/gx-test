@@ -12,7 +12,8 @@ module.exports = function (api) {
           "targets": {     
             "node": targetLTSVersion
           },
-          "exclude": [ "@babel/plugin-transform-regenerator" ]
+          "exclude": [ "@babel/plugin-transform-regenerator" ],
+          "loose": true
         }
       ]
     ],
@@ -20,23 +21,12 @@ module.exports = function (api) {
     "ignore": [
       "node_modules"
     ], 
-    "plugins": [
-      ["contract", {
-        "strip": isProduction,
-        "names": {
-          "assert": "assert",
-          "precondition": "pre",
-          "postcondition": "post",
-          "invariant": "invariant",
-          "return": "it"
-        }
-      }],      
+    "plugins": [      
       ["@babel/plugin-proposal-decorators", {"legacy": true}],
       ["@babel/plugin-proposal-class-properties", { "loose": true }],
       "@babel/plugin-proposal-nullish-coalescing-operator",
       "@babel/plugin-proposal-optional-chaining",
       "@babel/plugin-proposal-logical-assignment-operators",
-      ["@babel/plugin-proposal-pipeline-operator", { "proposal": "minimal" }],
       "source-map-support"
     ]
   };
