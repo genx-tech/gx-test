@@ -53,7 +53,7 @@ class Suite {
             throw new Error("Web server already started.");
         }
 
-        const createWebServer = this.serverEntry ? require(this.serverEntry) : require.main.require("../../src/index.js")
+        const createWebServer = this.serverEntry ? require(this.serverEntry) : require.main.require("../../src/index.js");
         this.webServer = createWebServer({
             exitOnUncaught: false,
         });
@@ -113,7 +113,7 @@ class Suite {
         );
 
         if (err) {
-            should.not.exist(err, err.message || err);
+            throw err;
         }
     }
 
