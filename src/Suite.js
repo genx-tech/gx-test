@@ -130,17 +130,17 @@ class Suite {
      */
     async startRestClient_(serviceName, authenticator, testToRun, options) {
         return this.startWorker_(async (app) => {
-            if (typeof options === 'undefined') {
-                if (typeof testToRun === 'undefined') {
+            if (typeof options === "undefined") {
+                if (typeof testToRun === "undefined") {
                     testToRun = authenticator;
                     authenticator = null;
-                } else if (typeof testToRun === 'object') {
+                } else if (typeof testToRun === "object") {
                     options = testToRun;
                     testToRun = authenticator;
                     authenticator = null;
-                }                
-            }  
-            
+                }
+            }
+
             if (typeof authenticator === "string") {
                 authenticator = defaultUserAuth(app, authenticator);
             }
@@ -216,7 +216,7 @@ class Suite {
                 }
             }
 
-            const step_ = allure.createStep(`start ${story}`, () => body(data));
+            const step_ = allure ? allure.createStep(`start ${story}`, () => body(data)) : () => body(data);
 
             if (cleanUp) {
                 try {
