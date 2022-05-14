@@ -64,3 +64,4 @@ typings/
 test/temp
 .nyc_output
 coverage
+allure-results

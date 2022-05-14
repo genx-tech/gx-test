@@ -1,7 +1,8 @@
 const path = require("path");
 const { _ } = require("@genx/july");
 
-const tokenCache = {};
+const defaultUserAuth = require("./defaultUserAuth");
+
 let allure;
 
 /**
@@ -53,7 +54,9 @@ class Suite {
             throw new Error("Web server already started.");
         }
 
-        const createWebServer = this.serverEntry ? require(this.serverEntry) : require.main.require("../../src/index.js");
+        const createWebServer = this.serverEntry
+            ? require(this.serverEntry)
+            : require.main.require("../../src/index.js");
         this.webServer = createWebServer({
             exitOnUncaught: false,
         });
@@ -91,7 +94,7 @@ class Suite {
         const {
             Starters: { startWorker },
         } = require("@genx/app");
-        
+
         let err;
 
         await startWorker(
@@ -119,15 +122,30 @@ class Suite {
 
     /**
      * Start a rest client for testing
-     * @param {string} name - The config key of target endpoint
-     * @param {string} userTag - The config key of predefined user identity, pass null for guest mode.
+     * @param {string} serviceName - The config key of target endpoint
+     * @param {function|string} [authenticator] - Authenticator to be used, async (client) => {}, or pass a userTag to use default authenticator.
      * @param {testWithRestClient} testToRun - Test function with a connected rest client.
-     * @param {*} options - Options passed the test worker, see startWorker of @genx/app.
+     * @param {*} [options] - Options passed the test worker, see startWorker of @genx/app.
      * @async
      */
-    async startRestClient_(name, userTag, testToRun, options) {
+    async startRestClient_(serviceName, authenticator, testToRun, options) {
         return this.startWorker_(async (app) => {
-            const client = await this._getRestClient_(app, name, userTag);
+            if (typeof options === 'undefined') {
+                if (typeof testToRun === 'undefined') {
+                    testToRun = authenticator;
+                    authenticator = null;
+                } else if (typeof testToRun === 'object') {
+                    options = testToRun;
+                    testToRun = authenticator;
+                    authenticator = null;
+                }                
+            }  
+            
+            if (typeof authenticator === "string") {
+                authenticator = defaultUserAuth(app, authenticator);
+            }
+
+            const client = await this._getRestClient_(app, serviceName, authenticator);
             return testToRun(app, client);
         }, options);
     }
@@ -185,7 +203,6 @@ class Suite {
                 }
 
                 allure.story(story);
-                allure.createStep(`start ${story}`, () => {})();
 
                 if (data && data.params) {
                     _.forOwn(data.params, (v, k) => {
@@ -199,14 +216,16 @@ class Suite {
                 }
             }
 
+            const step_ = allure.createStep(`start ${story}`, () => body(data));
+
             if (cleanUp) {
                 try {
-                    await body(data);
+                    await step_();
                 } finally {
                     await cleanUp();
                 }
             } else {
-                await body(data);
+                await step_();
             }
         });
     }
@@ -244,7 +263,7 @@ class Suite {
     /**
      * Run benchmark against given methods.
      * @param {*} mapOfMethods - Map of name to function with payload
-     * @param {*} payload 
+     * @param {*} payload
      */
     async benchmark_(mapOfMethods, payload) {
         const Benchmark = require("benchmark");
@@ -282,17 +301,13 @@ class Suite {
      * @param {function} [body] - Test step body
      */
     async testStep_(step, body) {
-        if (allure) {
-            allure.createStep(step, () => {})();
-        }
+        const stepFn_ = allure ? allure.createStep(step, () => body()) : body;
 
         if (this.verbose) {
             console.log("Step: ", step);
         }
 
-        if (body) {
-            await body();
-        }
+        await stepFn_();
     }
 
     /**
@@ -314,7 +329,7 @@ class Suite {
         allure.createAttachment(name, content, type);
     }
 
-    async _getRestClient_(app, name, userTag) {
+    async _getRestClient_(app, name, authenticator) {
         const client = app.getService(this.webServer ? `superTest-${name}` : `restClient-${name}`);
         if (this.webServer) {
             client.server = this.webServer.httpServer;
@@ -326,40 +341,12 @@ class Suite {
             };
         }
 
-        if (!userTag) {
+        if (!authenticator) {
             delete client.onSend;
             return client;
         }
 
-        let token, userAuth;
-        let responseBodyKey = app.settings && app.settings.responseBodyKey;
-
-        if (_.isPlainObject(userTag)) {
-            token = tokenCache[userTag.userTag];
-            userAuth = userTag;
-        } else {
-            token = tokenCache[userTag];
-            userAuth = app.settings.userAuth[userTag];
-        }
-
-        if (!token) {
-            let res = await client.post(userAuth.endpoint, {
-                username: userAuth.username,
-                password: userAuth.password,
-            });
-            if (responseBodyKey) {
-                token = res[responseBodyKey].token;
-            } else {
-                token = res.token;
-            }
-            tokenCache[userTag] = token;
-
-            app.log("info", `Logged in with [${userTag}].`);
-        }
-
-        client.onSend = (req) => {
-            req.set("Authorization", `Bearer ${token}`);
-        };
+        await authenticator(client);
 
         return client;
     }

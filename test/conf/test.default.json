@@ -1,0 +1,30 @@
+{
+    "timezone": "Australia/Sydney",
+    "serviceGroup": {
+        "superTest": {
+            "default": "http://dummy.restapiexample.com/"
+        },
+        "restClient": {
+            "default": "http://dummy.restapiexample.com/api/v1"
+        }
+    },
+    "settings": {
+        "userAuth": {
+            "agency1": {
+                "endpoint": "/api/v1/agency/login",
+                "username": "agency1@ihom.tw",
+                "password": "test"
+            },
+            "agent1": {
+                "endpoint": "/api/v1/agency/login",
+                "username": "agent1@ihom.tw",
+                "password": "test"
+            },
+            "sysAdmin": {
+                "endpoint": "/api/v1/admin/login",
+                "username": "sys-admin",
+                "password": "test"
+            }
+        }
+    }
+}
