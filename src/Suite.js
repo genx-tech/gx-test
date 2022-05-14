@@ -203,6 +203,7 @@ class Suite {
                 }
 
                 allure.story(story);
+                allure.createStep(`start ${story}`, () => {})();
 
                 if (data && data.params) {
                     _.forOwn(data.params, (v, k) => {
@@ -214,18 +215,16 @@ class Suite {
                         }
                     });
                 }
-            }
-
-            const step_ = allure ? allure.createStep(`start ${story}`, () => body(data)) : () => body(data);
+            }            
 
             if (cleanUp) {
                 try {
-                    await step_();
+                    await body(data);
                 } finally {
                     await cleanUp();
                 }
             } else {
-                await step_();
+                await body(data);
             }
         });
     }
