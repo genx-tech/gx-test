@@ -26,10 +26,15 @@ function defaultUserAuth(app, userTag) {
                 );
             }
 
-            let body = await client.post(userAuth.endpoint, {
-                username: userAuth.username,
-                password: userAuth.password,
-            });
+            let body = await client.post(
+                userAuth.endpoint,
+                {
+                    username: userAuth.username,
+                    password: userAuth.password,
+                },
+                userAuth.query,
+                userAuth.headers ? { headers: userAuth.headers } : null
+            );
             if (userAuth.tokenKey) {
                 token = get(body, userAuth.tokenKey);
             } else {
