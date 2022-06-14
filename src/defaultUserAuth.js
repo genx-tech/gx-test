@@ -2,8 +2,8 @@ const { _, get } = require("@genx/july");
 
 const tokenCache = {};
 
-function defaultUserAuth(app, userTag) {
-    return async (client) => {
+function defaultUserAuth(userTag) {
+    return async (app, client) => {
         if (!userTag) {
             delete client.onSend;
             return client;

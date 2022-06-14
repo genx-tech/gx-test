@@ -142,7 +142,7 @@ class Suite {
             }
 
             if (typeof authenticator === "string") {
-                authenticator = defaultUserAuth(app, authenticator);
+                authenticator = defaultUserAuth(authenticator);
             }
 
             const client = await this._getRestClient_(app, serviceName, authenticator);
@@ -345,7 +345,7 @@ class Suite {
             return client;
         }
 
-        await authenticator(client);
+        await authenticator(app, client);
 
         return client;
     }
