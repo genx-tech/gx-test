@@ -6,8 +6,8 @@
 .travis.yml
 jsdoc.json
 babel.config.js
+.mocharc.js 
 *.log
-*.md
 src
 test
 examples
