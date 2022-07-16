@@ -15,3 +15,4 @@ examples
 docs
 coverage
 .nyc_output
+allure-results
