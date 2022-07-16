@@ -1,6 +1,4 @@
-require('@babel/register')({
-    sourceMaps: true
-});
+require('@swc/register');
 
 module.exports = {
     'timeout': 60000,

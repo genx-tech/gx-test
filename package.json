@@ -1,60 +1,80 @@
 {
-  "name": "@genx/test",
-  "version": "2.1.1",
-  "description": "Gen-X test framework",
-  "main": "lib/index.js",
-  "publishConfig": {
-    "access": "public"
-  },
-  "peerDependencies": {
-    "@genx/app": ">=2.0.0"
-  },
-  "dependencies": {
-    "@genx/july": "^1.0.5",
-    "@genx/sys": "^0.1.5",
-    "allure-commandline": "2.17.2",
-    "allure-js-commons": "2.0.0-beta.16",
-    "allure-mocha": "2.0.0-beta.16",
-    "benchmark": "2.1.4",
-    "mocha": "9.0.0",
-    "mocha-multi": "1.1.5",
-    "nyc": "15.1.0",
-    "should": "13.2.3",
-    "supertest": "6.1.3"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.14.8",
-    "@babel/core": "^7.15.0",
-    "@babel/plugin-proposal-class-properties": "^7.14.5",
-    "@babel/plugin-proposal-decorators": "^7.14.5",
-    "@babel/preset-env": "^7.15.0",
-    "@babel/register": "^7.17.7",
-    "babel-plugin-source-map-support": "^2.1.3",
-    "del-cli": "^4.0.1",
-    "ink-docstrap": "^1.3.2",
-    "source-map-support": "^0.5.19"
-  },
-  "scripts": {
-    "doc": "jsdoc -c jsdoc.json -t ./node_modules/ink-docstrap/template -R README.md -d './docs' -r --verbose ./src",
-    "test:clean": "del allure-results",
-    "bulid:clean": "del lib",
-    "build": "npm run bulid:clean && NODE_ENV=production babel src -d lib --copy-files",
-    "test": "mocha --reporter mocha-multi --reporter-options mocha-multi=test/mocha-multi-reporters.json test/*.spec.js",
-    "cover": "npm run test:clean && COVER_MODE=1 nyc --reporter=html --reporter=text -- mocha --reporter mocha-multi --reporter-options mocha-multi=test/mocha-multi-reporters.json test/*.spec.js",
-    "report": "allure generate allure-results --clean -o allure-report && allure open allure-report",
-    "prepare": "npm run build"
-  },
-  "author": "Rockie Guo <rockie@kitmi.com.au>",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/genx-tech/gx-test.git"
-  },
-  "bugs": {
-    "url": "https://github.com/genx-tech/gx-test/issues"
-  },
-  "keywords": [
-    "genx-suite",
-    "test"
-  ]
+    "name": "@genx/test",
+    "version": "2.1.1",
+    "description": "Gen-X test framework",
+    "main": "lib/index",
+    "module": "lib/index",
+    "react-native": "lib/index.js",
+    "publishConfig": {
+        "access": "public",
+        "registry": "https://registry.npmjs.org"
+    },
+    "peerDependencies": {
+        "@genx/app": ">=2.0.0"
+    },
+    "dependencies": {
+        "@genx/july": "^1.1.1",
+        "@genx/sys": "^0.1.6",
+        "allure-commandline": "2.17.2",
+        "allure-js-commons": "2.0.0-beta.16",
+        "allure-mocha": "2.0.0-beta.16",
+        "benchmark": "2.1.4",
+        "mocha": "9.0.0",
+        "mocha-multi": "1.1.5",
+        "nyc": "15.1.0",
+        "should": "13.2.3",
+        "supertest": "6.1.3"
+    },
+    "devDependencies": {
+        "@genx/app": "^2.0.4",
+        "@release-it/conventional-changelog": "^5.0.0",
+        "@swc/cli": "^0.1.57",
+        "@swc/core": "^1.2.213",
+        "@swc/register": "^0.1.10",
+        "del-cli": "^4.0.1",
+        "ink-docstrap": "^1.3.2",
+        "jsdoc": "^3.6.10",
+        "release-it": "^15.1.1"
+    },
+    "scripts": {
+        "doc": "jsdoc -c jsdoc.json -t ./node_modules/ink-docstrap/template -R README.md -d './docs' -r --verbose ./src",
+        "test:clean": "del allure-results",
+        "bulid:clean": "del lib",
+        "build": "npm run bulid:clean && swc src --env-name='production' -d lib --source-maps --copy-files",
+        "test": "mocha --reporter mocha-multi --reporter-options mocha-multi=test/mocha-multi-reporters.json test/*.spec.js",
+        "cover": "npm run test:clean && COVER_MODE=1 nyc --reporter=html --reporter=text -- mocha --reporter mocha-multi --reporter-options mocha-multi=test/mocha-multi-reporters.json test/*.spec.js",
+        "report": "allure generate allure-results --clean -o allure-report && allure open allure-report",
+        "prepare": "npm run build",
+        "release": "release-it"
+    },
+    "author": "Rockie Guo <rockie@kitmi.com.au>",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/genx-tech/gx-test.git"
+    },
+    "bugs": {
+        "url": "https://github.com/genx-tech/gx-test/issues"
+    },
+    "keywords": [
+        "genx-suite",
+        "test"
+    ],
+    "release-it": {
+        "git": {
+            "commitMessage": "chore: release ${version}",
+            "tagName": "v${version}"
+        },
+        "npm": {
+            "publish": false
+        },
+        "github": {
+            "release": true
+        },
+        "plugins": {
+            "@release-it/conventional-changelog": {
+                "preset": "angular"
+            }
+        }
+    }
 }

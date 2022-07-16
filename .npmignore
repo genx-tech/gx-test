@@ -7,6 +7,7 @@
 jsdoc.json
 babel.config.js
 .mocharc.js 
+.swcrc
 *.log
 src
 test

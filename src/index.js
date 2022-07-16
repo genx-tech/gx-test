@@ -38,7 +38,7 @@ function testSuite(file, body, options) {
 
             body = file;
 
-            const dbgGetCallerFile = require("@genx/july/lib/commonjs/lang/dbgGetCallerFile").default;
+            const dbgGetCallerFile = require("@genx/july/lib/commonjs/lang/dbgGetCallerFile");
             file = dbgGetCallerFile();
         }
     }
