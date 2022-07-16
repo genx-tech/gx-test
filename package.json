@@ -1,6 +1,6 @@
 {
     "name": "@genx/test",
-    "version": "2.1.1",
+    "version": "2.1.2",
     "description": "Gen-X test framework",
     "main": "lib/index",
     "module": "lib/index",
