@@ -38,10 +38,11 @@ class Suite {
      */
     constructor(name, options) {
         this.name = name;
-        const { serverEntry, verbose } = options == null ? {} : options;
+        const { serverEntry, verbose, testDir } = options == null ? {} : options;
 
         this.serverEntry = serverEntry;
         this.verbose = verbose;
+        this.testDir = testDir;
     }
 
     /**
@@ -108,7 +109,7 @@ class Suite {
             {
                 workerName: "tester",
                 configName: "test",
-                configPath: "./test/conf",
+                configPath: path.join(".", this.testDir, 'conf'),
                 appModulesPath: "app_modules",
                 ignoreUncaught: true,
                 ...options,
@@ -236,7 +237,7 @@ class Suite {
      * @param {Object} [options]
      */
     testCaseFromFixtures(story, body, options) {
-        const p = path.resolve(`test/fixtures/${this.name}.js`);
+        const p = path.resolve(this.testDir, `fixtures/${this.name}.js`);
         const suiteData = require(p);
         if (!suiteData) throw new Error(`Suite data not found. Suite: ${this.name}`);
 

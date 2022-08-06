@@ -10,7 +10,7 @@ const Suite = require("./Suite");
 const SPECJS = ".spec.js";
 const DOTJS = ".js";
 
-const TEST_OPTS = "test/test.local.js"; 
+const TEST_OPTS = "test.local.js"; 
 
 /**
  * Test body used to define test cases.
@@ -52,10 +52,13 @@ function testSuite(file, body, options) {
         verbose,
         skip,
         only,
+        testDir = 'test',
     } = options == null ? {} : options;
 
-    const suiteName = path.basename(file, file.endsWith(SPECJS) ? SPECJS : DOTJS);
-    const testOptsFile = path.resolve(TEST_OPTS);
+    const relPath = path.relative(path.resolve(process.cwd(), testDir), file);
+    const suiteName = relPath.substring(0, relPath.length-(file.endsWith(SPECJS) ? SPECJS : DOTJS).length);
+
+    const testOptsFile = path.resolve(testDir, TEST_OPTS);
     let testOpts;
 
     if (fs.existsSync(testOptsFile)) {
@@ -65,7 +68,8 @@ function testSuite(file, body, options) {
     const suiteOptions = {
         serverEntry,
         verbose,
-        ...(testOpts ? _.pick(testOpts, ["serverEntry", "verbose"]) : {}),
+        testDir,
+        ...(testOpts ? _.pick(testOpts, ["serverEntry", "verbose"]) : null),
     };
 
     const suite = new Suite(suiteName, suiteOptions);
@@ -84,6 +88,7 @@ function testSuite(file, body, options) {
         } else {
             if (!_.isEmpty(testOpts.only)) {
                 console.log(`Suite "${suiteName}" skipped.`);
+                opt = "skip";
             } else {
                 const skip = new Set(testOpts.skip);
                 if (skip.has(suiteName)) {
