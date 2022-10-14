@@ -46,7 +46,7 @@ class Suite {
     }
 
     /**
-     * Start the @genx/server instace for code coverage testing.
+     * Start the @genx/server instance for code coverage testing.
      * @async
      * @private
      */
