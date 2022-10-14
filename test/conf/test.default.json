@@ -2,7 +2,7 @@
     "timezone": "Australia/Sydney",
     "serviceGroup": {
         "superTest": {
-            "default": "http://dummy.restapiexample.com/"
+            "default": "http://dummy.restapiexample.com/api/v1"
         },
         "restClient": {
             "default": "http://dummy.restapiexample.com/api/v1"

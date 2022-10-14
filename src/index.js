@@ -112,7 +112,7 @@ function testSuite(file, body, options) {
             }
 
             if (onBefore) {
-                await onBefore();
+                await onBefore(suite);
             }
         });
 
@@ -120,7 +120,7 @@ function testSuite(file, body, options) {
             await suite.stopWebServerIfStarted_();
 
             if (onAfter) {
-                await onAfter();
+                await onAfter(suite);
             }
 
             console.log();
